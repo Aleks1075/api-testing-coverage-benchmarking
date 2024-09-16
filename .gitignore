@@ -17,12 +17,6 @@ jspm_packages/
 # Output directories
 dist/
 
-# Ignore the entire coverage directory
-coverage/
-# But include the HTML report
-!coverage/lcov-report/
-!coverage/lcov-report/**
-
 # Environment variables
 .env
 
@@ -32,6 +26,3 @@ coverage/
 # IDE files
 .vscode/
 .idea/
-
-# Ensure Postman files are included
-!postman/
