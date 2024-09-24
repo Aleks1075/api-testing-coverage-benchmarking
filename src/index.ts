@@ -8,12 +8,22 @@ const taskService = new TaskService();
 app.use(express.json());
 
 app.post("/tasks", (req: Request, res: Response) => {
-  const { title, deadline } = req.body;
-  const task = taskService.addTask(
-    title,
-    deadline ? new Date(deadline) : undefined
-  );
-  res.status(201).json(task);
+  const { title, description, deadline } = req.body;
+
+  if (!title || title.trim() === "") {
+    return res.status(400).json({ message: "Title is required" });
+  }
+
+  try {
+    const task = taskService.addTask(
+      title,
+      description,
+      deadline ? new Date(deadline) : undefined
+    );
+    res.status(201).json(task);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
 });
 
 app.get("/tasks", (req: Request, res: Response) => {
@@ -33,17 +43,27 @@ app.get("/tasks/:id", (req: Request, res: Response) => {
 
 app.put("/tasks/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-  const { title, completed, deadline } = req.body;
-  const task = taskService.updateTask(
-    parseInt(id),
-    title,
-    completed,
-    deadline ? new Date(deadline) : undefined
-  );
-  if (task) {
-    res.json(task);
-  } else {
-    res.status(404).json({ message: "Task not found" });
+  const { title, completed, description, deadline } = req.body;
+
+  if (!title || title.trim() === "") {
+    return res.status(400).json({ message: "Title is required" });
+  }
+
+  try {
+    const task = taskService.updateTask(
+      parseInt(id),
+      title,
+      completed,
+      description,
+      deadline ? new Date(deadline) : undefined
+    );
+    if (task) {
+      res.json(task);
+    } else {
+      res.status(404).json({ message: "Task not found" });
+    }
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
   }
 });
 
